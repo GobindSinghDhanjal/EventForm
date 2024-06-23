@@ -1,31 +1,31 @@
 import { useState, useEffect } from 'react';
 
-const useForm = (validate) => {
-  const [values, setValues] = useState({});
+const useForm = (initialValues, validate, callback) => {
+  const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
     setValues({
       ...values,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setErrors(validate(values));
-    setSubmitted(true);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const validationErrors = validate(values);
+    setErrors(validationErrors);
+    setIsSubmitting(true);
   };
 
   useEffect(() => {
-    if (Object.keys(errors).length === 0 && submitted) {
-      setValues({ ...values, submitted: true });
-    } else {
-      setValues({ ...values, submitted: false });
+    if (Object.keys(errors).length === 0 && isSubmitting) {
+      callback();
     }
-  }, [errors]);
+    setIsSubmitting(false);
+  }, [errors, isSubmitting, callback]);
 
   return { handleChange, handleSubmit, values, errors };
 };

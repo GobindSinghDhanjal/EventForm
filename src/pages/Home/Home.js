@@ -5,8 +5,8 @@ import JobApplicationForm from '../../components/JobApplicationForm'
 const Home = () => {
   return (
     <div>
-      {/* <EventRegistrationForm/> */}
-      <JobApplicationForm/>
+      <EventRegistrationForm/>
+      {/* <JobApplicationForm/> */}
     </div>
   )
 }
